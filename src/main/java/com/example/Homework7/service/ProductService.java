@@ -7,8 +7,8 @@ import com.example.Homework7.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -18,26 +18,33 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
-    private List<Product> totalProducts = new ArrayList<>();
 
     public List<ProductDTO> getAllProducts() {
         return productRepository.findAll().stream()
+                .filter(product -> !product.getDeleted() )
                 .map(productMapper::toProductDTO)
                 .collect(Collectors.toList());
     }
 
     public List<ProductDTO> getAllProductsAndDeletedOnes() {
-        return totalProducts.stream().
-                map(productMapper::toProductDTO).
-                collect(Collectors.toList());
+        return productRepository.findAll().stream()
+                .map(productMapper::toProductDTO)
+                .collect(Collectors.toList());
+    }
+
+    public Product getProductById(Integer id) {
+        return productRepository.findById(id).get();
     }
 
     public void deleteProductById(Integer id) {
-        productRepository.deleteById(id);
+        Optional<Product> product = productRepository.findById(id);
+        if(product.isPresent()) {
+            product.get().setDeleted(true);
+        }
+        productRepository.save(product.get());
     }
 
     public Product saveProduct(Product product) {
-        totalProducts.add(product);
         return productRepository.save(product);
     }
 
@@ -47,15 +54,11 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product incrementStock(Integer id) {
-        Product product = productRepository.findById(id).get();
-        product.setStock(product.getStock() + 1);
-        return productRepository.save(product);
+    public void incrementStock(Integer id) {
+        productRepository.incrementStock(id);
     }
 
-    public Product decrementStock(Integer id) {
-        Product product = productRepository.findById(id).get();
-        product.setStock(product.getStock() - 1);
-        return productRepository.save(product);
+    public void decrementStock(Integer id) {
+        productRepository.decrementStock(id);
     }
 }

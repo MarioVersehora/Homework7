@@ -1,5 +1,5 @@
 package com.example.Homework7.model;
 
-public enum Type {
+public enum ProductType {
     ELB, ELG, ELC
 }

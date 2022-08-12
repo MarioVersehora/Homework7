@@ -35,19 +35,19 @@ public class ProductController {
         return productService.saveProduct(product);
     }
 
-    @PostMapping("{id}/{stock}")
-    public Product updateStock(@PathVariable Integer id, @PathVariable Integer stock) {
-        return productService.updateStock(id, stock);
+    @PostMapping("{id}/{newStock}")
+    public Product updateStock(@PathVariable Integer id, @PathVariable Integer newStock) {
+        return productService.updateStock(id, newStock);
     }
 
     @PostMapping("increment/{id}")
-    public Product incrementStock(@PathVariable Integer id) {
-        return productService.incrementStock(id);
+    public void incrementStock(@PathVariable Integer id) {
+        productService.incrementStock(id);
     }
 
     @PostMapping("decrement/{id}")
-    public Product decrementStock(@PathVariable Integer id) {
-        return productService.decrementStock(id);
+    public void decrementStock(@PathVariable Integer id) {
+        productService.decrementStock(id);
     }
 
 }
