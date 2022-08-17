@@ -24,5 +24,6 @@ public class Product {
     private String identificationCode;
     private Integer stock;
     private Boolean deleted = false;
+    private Integer price;
 
 }
